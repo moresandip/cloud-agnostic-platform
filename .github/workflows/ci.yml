@@ -32,7 +32,7 @@ jobs:
       - name: Build worker image
         run: docker build -t devops-sample-worker:${{ github.sha }} app/worker
       - name: Scan API image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: devops-sample-api:${{ github.sha }}
           format: table
@@ -41,7 +41,7 @@ jobs:
           vuln-type: os,library
           severity: CRITICAL,HIGH
       - name: Scan worker image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: devops-sample-worker:${{ github.sha }}
           format: table
