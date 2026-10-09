@@ -1,0 +1,51 @@
+﻿name: CI - Test and Scan
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    name: Run API tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run API unit tests
+        run: python -m unittest discover -s tests -v
+  build-and-scan:
+    name: Build and scan images
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -t devops-sample-api:${{ github.sha }} app
+      - name: Build worker image
+        run: docker build -t devops-sample-worker:${{ github.sha }} app/worker
+      - name: Scan API image
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: devops-sample-api:${{ github.sha }}
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+      - name: Scan worker image
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: devops-sample-worker:${{ github.sha }}
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH

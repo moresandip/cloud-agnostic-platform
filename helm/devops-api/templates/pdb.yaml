@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: devops-api-pdb
+  labels:
+    app: devops-api
+    tenant: {{ .Values.tenant.name }}
+    environment: {{ .Values.tenant.environment }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: devops-api

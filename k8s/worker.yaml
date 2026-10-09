@@ -1,0 +1,36 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-worker
+  namespace: devops
+  labels:
+    app: devops-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-worker
+  template:
+    metadata:
+      labels:
+        app: devops-worker
+    spec:
+      terminationGracePeriodSeconds: 70
+      containers:
+        - name: worker
+          image: devops-sample-worker:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: JOB_SECONDS
+              value: "2"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

@@ -1,0 +1,20 @@
+﻿# Temporary Kubernetes edit files
+app/kubectl.exe-edit-*.yaml
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+# Terraform state and local configuration
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+# Local test output
+*.log

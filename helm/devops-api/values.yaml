@@ -1,0 +1,26 @@
+replicaCount: 2
+image:
+  repository: devops-sample-api
+  tag: "1.1"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+probes:
+  healthPath: /healthz
+  readyPath: /readyz
+deployment:
+  maxUnavailable: 0
+  maxSurge: 1
+terminationGracePeriodSeconds: 30
+tenant:
+  name: shared
+  environment: dev
